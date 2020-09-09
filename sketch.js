@@ -39,7 +39,20 @@ function draw() {
   textSize(20);
   fill("white");
   text("foodStock remaining: "+foodS,200,50);
+  database.ref("foodTime").on("value",function(data){
+    lastFed=data.val();
+  })
+  if(lastFed>12){
+    text("Last Fed: "+lastFed%12+"PM",700,50);
+  }
+  else if(lastFed==0){
+    text("Last Fed: 12 AM",700,50);
+  }
+else{
+  text("Last Fed: "+lastFed +"AM",700,50);
 }
+}
+
 function readStock(data){
   foodS=data.val();
   food1.updateFoodStock(foodS);
@@ -56,11 +69,15 @@ function writeStock(x){
 }
 function feedDog(){
   dog.changeImage("happy",happyDogpng);
-  food1.updateFoodStock(food1.getFoodStock()-1);
-  database.ref("/").update({
-    foodStock:food1.getFoodStock(),
-    foodTime:hour()
-  })
+  if(food1.getFoodStock()>0){
+    food1.updateFoodStock(food1.getFoodStock()-1);
+    database.ref("/").update({
+      foodStock:food1.getFoodStock(),
+      foodTime:hour()
+    })
+  }else{
+    alert("There is No Food,DOG WILL DIE")
+  }
 }
 function addFood(){
   foodS++

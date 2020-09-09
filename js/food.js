@@ -10,11 +10,7 @@ class Food{
     updateFoodStock(stock){
         this.foodStock=stock;
     }
-    deductFood(foodStock){
-        if(this.foodStock>0){
-            this.foodStock=this.foodStock-1;
-        }
-    }
+    
     display(){
         imageMode(CENTER);
         image(this.image,720,200,70,70);
