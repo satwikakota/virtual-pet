@@ -10,6 +10,16 @@ class Food{
     updateFoodStock(stock){
         this.foodStock=stock;
     }
+    bedroom(){
+        background(bedroomIMG,550,500);
+    }
+    garden(){
+        background(gardenIMG,550,500);
+    }
+    washroom(){
+        background(washroomIMG,550,500);
+    }
+
     
     display(){
         imageMode(CENTER);
