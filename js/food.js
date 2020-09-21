@@ -11,13 +11,13 @@ class Food{
         this.foodStock=stock;
     }
     bedroom(){
-        background(bedroomIMG,550,500);
+        background(bedroomIMG);
     }
     garden(){
-        background(gardenIMG,550,500);
+        background(gardenIMG);
     }
     washroom(){
-        background(washroomIMG,550,500);
+        background(washroomIMG);
     }
 
     

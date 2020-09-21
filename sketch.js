@@ -5,7 +5,8 @@ var petButton, foodButton, fedTime, lastFed, foodObj;
 var feedDog;
 var changingGameState, readingGameState;
 var bedroomIMG,gardenIMG,washroomIMG;
-var currenttime=hour(); 
+var gameState;
+var feed;
 function preload()
 {
   dogIMG=loadImage("images/dogImg.png");
@@ -18,7 +19,7 @@ function preload()
 }
 
 function setup() {
-  createCanvas(1500,500);
+  createCanvas(1500,700);
   dog=createSprite(800,250, 10,10);
   dog.addImage("dog1",dogIMG);
   dog.addImage("happy",happyDogpng);
@@ -33,7 +34,7 @@ function setup() {
   addButton=createButton("Add Food");
   addButton.position(1100,50); 
   addButton.mousePressed(addFood);
-  readGameState=database.ref('gameState').on("value",function(data){
+  database.ref('gameState').on("value",function(data){
     gameState=data.val(); 
   })
 
@@ -43,6 +44,21 @@ function setup() {
 function draw() {  
   background(46, 139, 87);
   food1.display();
+  var currenttime=hour();
+  if(currenttime==(lastFed+1)){
+    food1.garden();
+    update("Playing");
+  
+  }else if(currenttime==(lastFed+2)){
+    food1.bedroom();
+    update("Bedroom");
+  }else if(currenttime>(lastFed+2) && currenttime<=(lastFed+4) ){
+    food1.washroom();
+    update("Bathing");
+  }else{
+    update("Hungry");
+    food1.display();
+  }
   drawSprites();
   text(mouseX+","+mouseY,mouseX,mouseY);
   textSize(20);
@@ -57,33 +73,18 @@ function draw() {
   else if(lastFed==0){
     text("Last Fed: 12 AM",700,50);
   }
-else{
+  else{
   text("Last Fed: "+lastFed +"AM",700,50);
-}
 }
 if(gameState!="hungry"){
   feed.hide();
-  addFood.hide();
+  addButton.hide();
   dog.remove();
 }else{
   feed.show();
-  addFood.show();
+  addButton.show();
   dog.addImage("images/virtual pet images/deadDog.png");
 }
-if(currenttime==(lastFed+1)){
-  food1.garden();
-  update("Playing");
-
-}else if(currenttime==(lastFed+2)){
-  food1.bedroom();
-  update("Bedroom");
-}else if(currenttime<(lastFed+2) && currenttime>(lastFed+4) ){
-  food1.washroom();
-  update("Bathing");
-}else{
-  update("Hungry");
-  food1.display();
-  feedDog();
 }
 
 function readStock(data){
@@ -102,14 +103,15 @@ function writeStock(x){
 }
 function feedDog(){
   dog.changeImage("happy",happyDogpng);
-  if(food1.getFoodStock()>0){
+  if(foodS>0){
     food1.updateFoodStock(food1.getFoodStock()-1);
     database.ref("/").update({
       foodStock:food1.getFoodStock(),
       foodTime:hour()
     })
-  }else{
-    alert("There is No Food,DOG WILL DIE")
+  }
+  else{
+    alert("THERE IS NO FOOD,DOG WILL DIE");
   }
 }
 function addFood(){
