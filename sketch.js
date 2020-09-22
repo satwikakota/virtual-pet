@@ -16,6 +16,7 @@ function preload()
   bedroomIMG=loadImage("images/virtual pet images/Bed Room.png");
   gardenIMG=loadImage("images/virtual pet images/Garden.png");
   washroomIMG=loadImage("images/virtual pet images/Wash Room.png");
+  dogChange=loadImage("images/virtual pet images/deadDog.png");
 }
 
 function setup() {
@@ -23,6 +24,7 @@ function setup() {
   dog=createSprite(800,250, 10,10);
   dog.addImage("dog1",dogIMG);
   dog.addImage("happy",happyDogpng);
+  dog.addImage("images/virtual pet images/deadDog.png",dogChange);
   dog.scale=0.2;
   database=firebase.database();
   var foodStock=database.ref('foodStock');
@@ -37,13 +39,13 @@ function setup() {
   database.ref('gameState').on("value",function(data){
     gameState=data.val(); 
   })
-
 }
 
 
 function draw() {  
   background(46, 139, 87);
   food1.display();
+  console.log(gameState);
   var currenttime=hour();
   if(currenttime==(lastFed+1)){
     food1.garden();
@@ -76,14 +78,14 @@ function draw() {
   else{
   text("Last Fed: "+lastFed +"AM",700,50);
 }
-if(gameState!="hungry"){
+if(gameState!="Hungry"){
   feed.hide();
   addButton.hide();
   dog.remove();
 }else{
   feed.show();
   addButton.show();
-  dog.addImage("images/virtual pet images/deadDog.png");
+  dog.changeImage("images/virtual pet images/deadDog.png",dogChange);
 }
 }
 
